@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: mssql
+  name: mssql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: mssql
+  template:
+    metadata:
+      labels:
+        run: mssql
+    spec:
+      volumes:
+        - name: sqldata-storage
+          persistentVolumeClaim:
+            claimName: sqldbclaim
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 10001:0 /var/opt/mssql"]
+        volumeMounts:
+        - mountPath: "/var/opt/mssql"
+          name: sqldata-storage
+      containers:
+      - image: {{ .Values.image }}
+        name: mssql
+        env:
+        - name: ACCEPT_EULA
+          value: "{{ .Values.acceptEula }}"
+        - name: SA_PASSWORD
+          value: {{ .Values.password }}
+        - name: MSSQL_PID
+          value: {{ .Values.mssqlPid }}
+        ports:
+        - containerPort: {{ .Values.port }}
+          name: mssql
+        volumeMounts:
+        - mountPath: "/var/opt/mssql"
+          name: sqldata-storage

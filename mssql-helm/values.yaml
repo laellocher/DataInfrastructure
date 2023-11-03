@@ -1,0 +1,16 @@
+# Storage Configuration
+storageSize: 30Gi
+storageClassName: sqlserver
+accessModes: ReadWriteMany
+hostPath: "/var/lib/mssql"
+
+# MSSQL Configuration
+image: mcr.microsoft.com/mssql/server
+acceptEula: "Y"
+password: Temenos1234!
+mssqlPid: Developer
+port: 1433
+
+# Service Configuration
+serviceType: NodePort
+nodePort: 31433

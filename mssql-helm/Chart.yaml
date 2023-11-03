@@ -1,0 +1,4 @@
+apiVersion: v2
+name: mssql-helm
+description: A Helm chart for Kubernetes to deploy SQL Server with persistent volumes
+version: 0.1.0
